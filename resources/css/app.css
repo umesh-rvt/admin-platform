@@ -1,3 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.css';
+
+/* AdminLTE CSS */
+@import 'admin-lte/dist/css/adminlte.css';
+
+/* Ionicons for AdminLTE icons */
+@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+
+/* Custom styles */
+.brand-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8125rem 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand-image {
+    width: 33px;
+    height: 33px;
+    margin-right: 0.5rem;
+}
