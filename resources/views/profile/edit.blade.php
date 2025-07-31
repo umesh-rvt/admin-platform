@@ -1,49 +1,42 @@
-@extends('layouts.adminlte')
-
-@section('title', 'Profile')
-
-@section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-    <li class="breadcrumb-item active">Profile</li>
-@endsection
+@extends('layouts.app')
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Update Profile Information</h3>
-                </div>
-                <div class="card-body">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-        </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Profile</h1>
+        <p class="text-gray-600 mt-2">Manage your account settings</p>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Update Password</h3>
-                </div>
-                <div class="card-body">
-                    @include('profile.partials.update-password-form')
-                </div>
+    <div class="space-y-8">
+        <!-- Update Profile Information -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Update Profile Information</h3>
+            </div>
+            <div class="p-6">
+                @include('profile.partials.update-profile-information-form')
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-danger">
-                <div class="card-header">
-                    <h3 class="card-title">Delete Account</h3>
-                </div>
-                <div class="card-body">
-                    @include('profile.partials.delete-user-form')
-                </div>
+        <!-- Update Password -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Update Password</h3>
+            </div>
+            <div class="p-6">
+                @include('profile.partials.update-password-form')
+            </div>
+        </div>
+
+        <!-- Delete Account -->
+        <div class="bg-white rounded-lg shadow border-l-4 border-red-500">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-red-900">Delete Account</h3>
+            </div>
+            <div class="p-6">
+                @include('profile.partials.delete-user-form')
             </div>
         </div>
     </div>
+</div>
 @endsection

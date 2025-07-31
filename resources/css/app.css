@@ -1,11 +1,6 @@
-/* Bootstrap CSS */
-@import 'bootstrap/dist/css/bootstrap.css';
-
-/* AdminLTE CSS */
-@import 'admin-lte/dist/css/adminlte.css';
-
-/* Ionicons for AdminLTE icons */
-@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom styles */
 .brand-link {
