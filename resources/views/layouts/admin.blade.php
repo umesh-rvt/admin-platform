@@ -10,24 +10,32 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/admin.js'])
 </head>
-<body class="font-sans antialiased bg-gray-100">
+<body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <div class="bg-gray-800 text-white w-64 min-h-screen flex-shrink-0">
-            <div class="p-4">
-                <h1 class="text-2xl font-bold">{{ config('app.name', 'Laravel') }}</h1>
-                <p class="text-gray-400 text-sm">Admin Panel</p>
+        <div class="bg-white border-r border-gray-200 w-64 min-h-screen flex-shrink-0 shadow-lg">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <img src="{{ asset('images/logo-favicon.png') }}" alt="Logo" class="h-8 w-auto mr-3">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">{{ config('app.name', 'Laravel') }}</h1>
+                        <p class="text-sm text-gray-500">Admin Panel</p>
+                    </div>
+                </div>
             </div>
             
-            <nav class="mt-8">
-                <div class="px-4 space-y-2">
+            <nav class="mt-6 px-4">
+                <div class="space-y-1">
                     <a href="{{ route('admin.dashboard') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-tachometer-alt mr-3 {{ request()->routeIs('admin.dashboard') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Dashboard
                     </a>
 
@@ -96,14 +104,14 @@
                     
                     <div class="flex items-center space-x-4">
                         <div class="relative">
-                            <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
+                            <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
                         </div>
                         
                         <div class="relative">
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-sign-out-alt"></i>
+                                <button type="submit" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
                                     Logout
                                 </button>
                             </form>

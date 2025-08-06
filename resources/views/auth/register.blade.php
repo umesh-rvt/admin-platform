@@ -1,19 +1,35 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <div class="auth-card">
+        <div class="auth-header">
+            <img class="auth-logo" src="{{ asset('images/logo.png') }}" alt="Logo">
+            <h2 class="auth-title">Create an account</h2>
+            <p class="auth-subtitle">
+                Get started with your free account
+            </p>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="auth-form-container">
+            <div class="auth-form">
+                <form method="POST" action="{{ route('register') }}" class="space-y-6">
+                    @csrf
+
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="form-label">Full name</label>
+                        <div class="mt-1">
+                            <input id="name" name="name" type="text" required 
+                                class="form-input" value="{{ old('name') }}" autocomplete="name">
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div>
+                        <label for="email" class="form-label">Email address</label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" required 
+                                class="form-input" value="{{ old('email') }}" autocomplete="email">
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->

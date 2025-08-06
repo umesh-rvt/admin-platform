@@ -23,26 +23,24 @@ class PermissionController extends AdminController
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('display_name', 'like', "%{$search}%");
+                  ->orWhere('display_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
-        // Filter by module
+        // Filter by module if requested
         if ($request->filled('module')) {
             $query->where('module', $request->module);
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
-        }
-
-        $permissions = $query->latest()->paginate(15);
-
+        // Get permissions and group them by module
+        $permissions = $query->get();
+        $permissionsByModule = $permissions->groupBy('module');
+        
         // Get unique modules for filter
-        $modules = Permission::distinct()->pluck('module')->filter()->sort();
+        $modules = $permissionsByModule->keys()->sort();
 
-        return view('admin.permissions.index', compact('permissions', 'modules'));
+        return view('admin.permissions.index', compact('permissionsByModule', 'modules'));
     }
 
     /**
