@@ -10,6 +10,14 @@ class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
+
     protected $fillable = [
         'name',
         'display_name',

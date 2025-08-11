@@ -100,7 +100,8 @@ class UserController extends AdminController
         $this->requirePermission('users.view');
 
         $user->load('roles');
-        return view('admin.users.show', compact('user'));
+        $availableRoles = Role::where('is_active', true)->get();
+        return view('admin.users.show', compact('user', 'availableRoles'));
     }
 
     /**

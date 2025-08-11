@@ -99,19 +99,19 @@
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
                                     @if(auth()->user()->hasPermission('roles.view'))
-                                    <a href="{{ route('admin.roles.show', $role) }}" 
+                                    <a href="{{ route('admin.roles.show', ['role' => $role->id]) }}" 
                                        class="text-blue-600 hover:text-blue-900">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     @endif
                                     @if(auth()->user()->hasPermission('roles.edit'))
-                                    <a href="{{ route('admin.roles.edit', $role) }}" 
+                                    <a href="{{ route('admin.roles.edit', ['role' => $role->id]) }}" 
                                        class="text-indigo-600 hover:text-indigo-900">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @endif
                                     @if(auth()->user()->hasPermission('roles.delete') && $role->name !== 'admin')
-                                    <form method="POST" action="{{ route('admin.roles.destroy', $role) }}" 
+                                    <form method="POST" action="{{ route('admin.roles.destroy', ['role' => $role->id]) }}" 
                                           class="inline" onsubmit="return confirm('Are you sure you want to delete this role?')">
                                         @csrf
                                         @method('DELETE')

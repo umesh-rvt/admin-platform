@@ -45,7 +45,7 @@ class RoleController extends AdminController
     {
         $this->requirePermission('roles.create');
 
-        $permissions = Permission::active()->get()->groupBy('module');
+        $permissions = Permission::active()->get();
         return view('admin.roles.create', compact('permissions'));
     }
 
@@ -86,22 +86,23 @@ class RoleController extends AdminController
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show($id)
     {
         $this->requirePermission('roles.view');
 
-        $role->load(['permissions', 'users']);
+        $role = Role::with(['permissions', 'users'])->findOrFail($id);
         return view('admin.roles.show', compact('role'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role)
+    public function edit($id)
     {
         $this->requirePermission('roles.edit');
 
-        $permissions = Permission::active()->get()->groupBy('module');
+        $role = Role::findOrFail($id);
+        $permissions = Permission::active()->get();
         $role->load('permissions');
         
         return view('admin.roles.edit', compact('role', 'permissions'));
@@ -110,10 +111,11 @@ class RoleController extends AdminController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
         $this->requirePermission('roles.edit');
 
+        $role = Role::findOrFail($id);
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($role->id)],
             'display_name' => 'required|string|max:255',
@@ -142,10 +144,12 @@ class RoleController extends AdminController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
         $this->requirePermission('roles.delete');
 
+        $role = Role::findOrFail($id);
+        
         // Prevent deleting admin role
         if ($role->name === 'admin') {
             return redirect()->route('admin.roles.index')
