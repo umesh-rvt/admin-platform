@@ -25,82 +25,84 @@
             <p class="mt-1 text-sm text-gray-600">Manage system permissions by module</p>
         </div>
         @if(auth()->user()->hasPermission('permissions.create'))
-        <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.permissions.create') }}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
             <i class="fas fa-plus mr-2"></i>Add Permission
         </a>
         @endif
     </div>
 
-    <!-- Search -->
-    <div class="card">
-        <div class="card-body">
-            <form method="GET" action="{{ route('admin.permissions.index') }}" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="search" class="form-label">Search Permissions</label>
-                        <input type="text" name="search" id="search" 
-                               value="{{ request('search') }}"
-                               class="form-input"
-                               placeholder="Search by name or display name...">
-                    </div>
-                    <div>
-                        <label for="module" class="form-label">Filter by Module</label>
-                        <select name="module" id="module" class="form-input">
-                            <option value="">All Modules</option>
-                            @foreach($modules as $module)
-                                <option value="{{ $module }}" {{ request('module') == $module ? 'selected' : '' }}>
-                                    {{ ucfirst($module) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button type="submit" class="btn btn-secondary">
-                            <i class="fas fa-search mr-2"></i>Search
-                        </button>
-                    </div>
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="GET" action="{{ route('admin.permissions.index') }}" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="search" class="block text-sm font-medium text-gray-700">Search Permissions</label>
+                    <input type="text" name="search" id="search" 
+                           value="{{ request('search') }}"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Search by name or display name...">
                 </div>
-            </form>
-        </div>
+                <div>
+                    <label for="module" class="block text-sm font-medium text-gray-700">Filter by Module</label>
+                    <select name="module" id="module" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Modules</option>
+                        @foreach($modules as $module)
+                            <option value="{{ $module }}" {{ request('module') == $module ? 'selected' : '' }}>
+                                {{ ucfirst($module) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <!-- Permissions by Module -->
     @forelse($permissionsByModule as $module => $modulePermissions)
-    <div class="card">
-        <div class="card-header flex justify-between items-center">
-            <div>
-                <h3 class="text-lg font-medium text-gray-900">{{ ucfirst($module) }} Module</h3>
-                <p class="text-sm text-gray-500">{{ $modulePermissions->count() }} permissions</p>
+    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">{{ ucfirst($module) }} Module</h3>
+                    <p class="text-sm text-gray-500">{{ $modulePermissions->count() }} permissions</p>
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="table">
-                <thead>
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="w-1/4">Permission Name</th>
-                        <th class="w-1/4">Display Name</th>
-                        <th class="w-1/3">Description</th>
-                        <th>Roles</th>
-                        <th class="w-20">Actions</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permission Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($modulePermissions as $permission)
                     <tr>
-                        <td class="font-mono text-sm">{{ $permission->name }}</td>
-                        <td>{{ $permission->display_name }}</td>
-                        <td class="text-sm text-gray-500">{{ $permission->description ?: '-' }}</td>
-                        <td>
+                        <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">{{ $permission->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $permission->display_name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ $permission->description ?: '-' }}</td>
+                        <td class="px-6 py-4">
                             <div class="badge-container">
                                 @foreach($permission->roles as $role)
-                                    <span class="badge {{ $role->is_active ? 'badge-success' : 'badge-danger' }}">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $role->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         {{ $role->display_name }}
                                     </span>
                                 @endforeach
                             </div>
                         </td>
-                        <td>
-                            <div class="flex items-center space-x-3">
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-2">
                                 @if(auth()->user()->hasPermission('permissions.edit'))
                                 <a href="{{ route('admin.permissions.edit', $permission) }}" 
                                    class="text-blue-600 hover:text-blue-900">
@@ -129,13 +131,11 @@
         </div>
     </div>
     @empty
-    <div class="card">
-        <div class="card-body text-center py-12">
-            <div class="text-gray-500">
-                <i class="fas fa-lock text-4xl mb-4"></i>
-                <p class="text-lg">No permissions found</p>
-                <p class="text-sm">Try adjusting your search or filter criteria</p>
-            </div>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+        <div class="text-gray-500">
+            <i class="fas fa-lock text-4xl mb-4"></i>
+            <p class="text-lg">No permissions found</p>
+            <p class="text-sm">Try adjusting your search or filter criteria</p>
         </div>
     </div>
     @endforelse

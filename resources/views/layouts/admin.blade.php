@@ -41,48 +41,48 @@
 
                     @if(auth()->user()->hasPermission('users.view'))
                     <a href="{{ route('admin.users.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-users mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-users mr-3 {{ request()->routeIs('admin.users.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Users
                     </a>
                     @endif
 
                     @if(auth()->user()->hasPermission('roles.view'))
                     <a href="{{ route('admin.roles.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.roles.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-user-tag mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.roles.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-user-tag mr-3 {{ request()->routeIs('admin.roles.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Roles
                     </a>
                     @endif
 
                     @if(auth()->user()->hasPermission('permissions.view'))
                     <a href="{{ route('admin.permissions.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.permissions.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-key mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.permissions.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-key mr-3 {{ request()->routeIs('admin.permissions.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Permissions
                     </a>
                     @endif
 
                     @if(auth()->user()->hasPermission('pages.view'))
                     <a href="{{ route('admin.pages.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.pages.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-file-alt mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.pages.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-file-alt mr-3 {{ request()->routeIs('admin.pages.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Pages
                     </a>
                     @endif
 
                     @if(auth()->user()->hasPermission('contacts.view'))
                     <a href="{{ route('admin.contacts.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.contacts.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-envelope mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.contacts.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-envelope mr-3 {{ request()->routeIs('admin.contacts.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Contact Submissions
                     </a>
                     @endif
 
                     @if(auth()->user()->hasPermission('settings.view'))
                     <a href="{{ route('admin.settings.index') }}" 
-                       class="block px-4 py-2 rounded-lg {{ request()->routeIs('admin.settings.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                        <i class="fas fa-cog mr-3"></i>
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.settings.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-cog mr-3 {{ request()->routeIs('admin.settings.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
                         Settings
                     </a>
                     @endif

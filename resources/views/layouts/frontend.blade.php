@@ -177,7 +177,11 @@
             </div>
 
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-                <p>&copy; {{ date('Y') }} {{ $settings['site_name'] ?? config('app.name', 'Laravel') }}. All rights reserved.</p>
+                @if($settings['footer_text'] ?? false)
+                    <p>{!! $settings['footer_text'] !!}</p>
+                @else
+                    <p>&copy; {{ date('Y') }} {{ $settings['site_name'] ?? config('app.name', 'Laravel') }}. All rights reserved.</p>
+                @endif
             </div>
         </div>
     </footer>

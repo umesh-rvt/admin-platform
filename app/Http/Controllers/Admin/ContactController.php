@@ -43,15 +43,15 @@ class ContactController extends AdminController
 
         $contacts = $query->latest()->paginate(15);
 
-        // Get status counts for filters
-        $statusCounts = [
+        // Get status counts for statistics
+        $stats = [
+            'total' => ContactSubmission::count(),
             'new' => ContactSubmission::where('status', 'new')->count(),
-            'read' => ContactSubmission::where('status', 'read')->count(),
             'replied' => ContactSubmission::where('status', 'replied')->count(),
             'closed' => ContactSubmission::where('status', 'closed')->count(),
         ];
 
-        return view('admin.contacts.index', compact('contacts', 'statusCounts'));
+        return view('admin.contacts.index', compact('contacts', 'stats'));
     }
 
     /**
