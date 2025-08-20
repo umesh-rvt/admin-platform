@@ -6,8 +6,11 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\Admin\AssignUserRolesRequest;
 
 class UserController extends AdminController
 {
@@ -61,18 +64,11 @@ class UserController extends AdminController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         $this->requirePermission('users.create');
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'roles' => 'array',
-            'roles.*' => 'exists:roles,id',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $validated['name'],
@@ -120,18 +116,11 @@ class UserController extends AdminController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $this->requirePermission('users.edit');
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|string|min:8|confirmed',
-            'roles' => 'array',
-            'roles.*' => 'exists:roles,id',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $user->update([
             'name' => $validated['name'],
@@ -178,14 +167,11 @@ class UserController extends AdminController
     /**
      * Assign roles to user.
      */
-    public function assignRoles(Request $request, User $user)
+    public function assignRoles(AssignUserRolesRequest $request, User $user)
     {
         $this->requirePermission('users.assign_roles');
 
-        $validated = $request->validate([
-            'roles' => 'array',
-            'roles.*' => 'exists:roles,id',
-        ]);
+        $validated = $request->validated();
 
         $user->roles()->sync($validated['roles'] ?? []);
 

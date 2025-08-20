@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Models\Page;
 use App\Models\PageSection;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StorePageRequest;
+use App\Http\Requests\Admin\UpdatePageRequest;
+use App\Http\Requests\Admin\StorePageSectionRequest;
+use App\Http\Requests\Admin\UpdatePageSectionRequest;
 use Illuminate\Support\Str;
 
 class PageController extends AdminController
@@ -56,19 +60,11 @@ class PageController extends AdminController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePageRequest $request)
     {
         $this->requirePermission('pages.create');
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:pages',
-            'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|string',
-            'status' => 'required|in:draft,published',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         // Generate slug if not provided
         if (empty($validated['slug'])) {
@@ -76,6 +72,29 @@ class PageController extends AdminController
         }
 
         $page = Page::create($validated);
+
+        // Persist sections sent from the create page form (optional)
+        $sections = $request->input('sections', []);
+        if (is_array($sections) && count($sections) > 0) {
+            $preparedSections = [];
+            foreach ($sections as $section) {
+                $title = trim((string)($section['title'] ?? ''));
+                $content = trim((string)($section['content'] ?? ''));
+                if ($title !== '' || $content !== '') {
+                    $preparedSections[] = [
+                        'title' => $title,
+                        'content' => $content,
+                        'type' => in_array(($section['type'] ?? 'text'), ['text','html','image','video','gallery']) ? $section['type'] : 'text',
+                        'image_path' => $section['image_path'] ?? null,
+                        'sort_order' => isset($section['sort_order']) ? (int) $section['sort_order'] : 0,
+                        'is_active' => isset($section['is_active']) ? (bool) $section['is_active'] : true,
+                    ];
+                }
+            }
+            if (!empty($preparedSections)) {
+                $page->sections()->createMany($preparedSections);
+            }
+        }
 
         $this->logActivity('create', "Created page: {$page->title}", $page);
 
@@ -108,19 +127,11 @@ class PageController extends AdminController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Page $page)
+    public function update(UpdatePageRequest $request, Page $page)
     {
         $this->requirePermission('pages.edit');
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:pages,slug,' . $page->id,
-            'meta_description' => 'nullable|string',
-            'meta_keywords' => 'nullable|string',
-            'status' => 'required|in:draft,published',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         // Generate slug if not provided
         if (empty($validated['slug'])) {
@@ -128,6 +139,47 @@ class PageController extends AdminController
         }
 
         $page->update($validated);
+
+        // Handle batch upsert of sections submitted with the page form
+        $incomingSections = $request->input('sections', []);
+        if (is_array($incomingSections)) {
+            // Track existing and submitted IDs
+            $existingIds = $page->sections()->pluck('id')->all();
+            $submittedIds = [];
+
+            foreach ($incomingSections as $section) {
+                $sectionId = isset($section['id']) ? (int) $section['id'] : null;
+                $payload = [
+                    'title' => trim((string)($section['title'] ?? '')),
+                    'content' => (string)($section['content'] ?? ''),
+                    'type' => in_array(($section['type'] ?? 'text'), ['text','html','image','video','gallery']) ? $section['type'] : 'text',
+                    'image_path' => $section['image_path'] ?? null,
+                    'sort_order' => isset($section['sort_order']) ? (int) $section['sort_order'] : 0,
+                    'is_active' => isset($section['is_active']) ? (bool) $section['is_active'] : true,
+                ];
+
+                // Skip entirely empty new sections
+                if (!$sectionId && $payload['title'] === '' && trim($payload['content']) === '') {
+                    continue;
+                }
+
+                if ($sectionId && in_array($sectionId, $existingIds, true)) {
+                    // Update existing
+                    $page->sections()->where('id', $sectionId)->update($payload);
+                    $submittedIds[] = $sectionId;
+                } else {
+                    // Create new
+                    $newSection = $page->sections()->create($payload);
+                    $submittedIds[] = $newSection->id;
+                }
+            }
+
+            // Delete sections that were removed in the form
+            $idsToDelete = array_diff($existingIds, $submittedIds);
+            if (!empty($idsToDelete)) {
+                $page->sections()->whereIn('id', $idsToDelete)->delete();
+            }
+        }
 
         $this->logActivity('update', "Updated page: {$page->title}", $page);
 
@@ -154,18 +206,11 @@ class PageController extends AdminController
     /**
      * Store a new section for the page.
      */
-    public function storeSection(Request $request, Page $page)
+    public function storeSection(StorePageSectionRequest $request, Page $page)
     {
         $this->requirePermission('page_sections.create');
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'type' => 'required|in:text,html,image,video,gallery',
-            'image_path' => 'nullable|string',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $section = $page->sections()->create($validated);
 
@@ -178,7 +223,7 @@ class PageController extends AdminController
     /**
      * Update a section.
      */
-    public function updateSection(Request $request, Page $page, PageSection $section)
+    public function updateSection(UpdatePageSectionRequest $request, Page $page, PageSection $section)
     {
         $this->requirePermission('page_sections.edit');
 
@@ -187,14 +232,7 @@ class PageController extends AdminController
             abort(404);
         }
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'type' => 'required|in:text,html,image,video,gallery',
-            'image_path' => 'nullable|string',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $section->update($validated);
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StorePermissionRequest;
+use App\Http\Requests\Admin\UpdatePermissionRequest;
 use Illuminate\Validation\Rule;
 
 class PermissionController extends AdminController
@@ -57,17 +59,11 @@ class PermissionController extends AdminController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
         $this->requirePermission('permissions.create');
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions',
-            'display_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'module' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $permission = Permission::create($validated);
 
@@ -102,17 +98,11 @@ class PermissionController extends AdminController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
         $this->requirePermission('permissions.edit');
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('permissions')->ignore($permission->id)],
-            'display_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'module' => 'nullable|string|max:255',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $permission->update($validated);
 

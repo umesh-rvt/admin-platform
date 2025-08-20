@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ContactSubmission;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Http\Requests\Frontend\ContactRequest;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormSubmission;
 
@@ -23,15 +24,9 @@ class ContactController extends Controller
     /**
      * Store a new contact submission.
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:5000',
-        ]);
+        $validated = $request->validated();
 
         // Create contact submission
         $submission = ContactSubmission::create($validated);

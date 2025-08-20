@@ -23,6 +23,35 @@ class SettingSeeder extends Seeder
                 'description' => 'The name of your website',
                 'is_public' => true,
             ],
+
+            // Homepage Content
+            [
+                'key' => 'hero_title',
+                'value' => 'Welcome to Our Platform',
+                'type' => 'text',
+                'group' => 'general',
+                'display_name' => 'Homepage Hero Title',
+                'description' => 'Main title displayed on the homepage hero section',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'hero_subtitle',
+                'value' => 'Your trusted platform for excellence and innovation',
+                'type' => 'text',
+                'group' => 'general',
+                'display_name' => 'Homepage Hero Subtitle',
+                'description' => 'Subtitle displayed on the homepage hero section',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'about_content',
+                'value' => 'We are dedicated to providing the best experience for our users. Our platform combines cutting-edge technology with user-friendly design to deliver exceptional results.',
+                'type' => 'textarea',
+                'group' => 'general',
+                'display_name' => 'Homepage About Content',
+                'description' => 'Text displayed in the About section on the homepage',
+                'is_public' => true,
+            ],
             [
                 'key' => 'site_description',
                 'value' => 'A powerful Laravel admin platform with user management and content management',
@@ -89,6 +118,15 @@ class SettingSeeder extends Seeder
                 'display_name' => 'Contact Email',
                 'description' => 'Email address for contact form submissions',
                 'is_public' => false,
+            ],
+            [
+                'key' => 'contact_hours',
+                'value' => 'Mon–Fri 9:00 AM – 6:00 PM',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Business Hours',
+                'description' => 'Displayed business hours on the contact page',
+                'is_public' => true,
             ],
             [
                 'key' => 'contact_phone',
@@ -166,10 +204,57 @@ class SettingSeeder extends Seeder
                 'description' => 'Email address used for outgoing emails',
                 'is_public' => false,
             ],
+
+            // Contact Form Labels (Admin editable)
+            [
+                'key' => 'contact_label_name',
+                'value' => 'Name *',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Contact Form Label: Name',
+                'description' => 'Label for the name field on the contact form',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'contact_label_email',
+                'value' => 'Email *',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Contact Form Label: Email',
+                'description' => 'Label for the email field on the contact form',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'contact_label_phone',
+                'value' => 'Phone',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Contact Form Label: Phone',
+                'description' => 'Label for the phone field on the contact form',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'contact_label_subject',
+                'value' => 'Subject *',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Contact Form Label: Subject',
+                'description' => 'Label for the subject field on the contact form',
+                'is_public' => true,
+            ],
+            [
+                'key' => 'contact_label_message',
+                'value' => 'Message *',
+                'type' => 'text',
+                'group' => 'contact',
+                'display_name' => 'Contact Form Label: Message',
+                'description' => 'Label for the message field on the contact form',
+                'is_public' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {
-            Setting::create($setting);
+            Setting::firstOrCreate(['key' => $setting['key']], $setting);
         }
     }
 }

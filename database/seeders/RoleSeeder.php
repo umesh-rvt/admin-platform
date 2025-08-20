@@ -14,24 +14,27 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // Create Admin Role
-        $adminRole = Role::create([
+        $adminRole = Role::firstOrCreate([
             'name' => 'admin',
+        ], [
             'display_name' => 'Administrator',
             'description' => 'Full system administrator with all permissions',
             'is_active' => true,
         ]);
 
         // Create User Role
-        $userRole = Role::create([
+        $userRole = Role::firstOrCreate([
             'name' => 'user',
+        ], [
             'display_name' => 'User',
             'description' => 'Regular user with limited permissions',
             'is_active' => true,
         ]);
 
         // Create Editor Role
-        $editorRole = Role::create([
+        $editorRole = Role::firstOrCreate([
             'name' => 'editor',
+        ], [
             'display_name' => 'Editor',
             'description' => 'Content editor with page management permissions',
             'is_active' => true,
@@ -39,14 +42,14 @@ class RoleSeeder extends Seeder
 
         // Assign all permissions to admin role
         $allPermissions = Permission::all();
-        $adminRole->permissions()->attach($allPermissions->pluck('id'));
+        $adminRole->permissions()->syncWithoutDetaching($allPermissions->pluck('id'));
 
         // Assign limited permissions to user role
         $userPermissions = Permission::whereIn('name', [
             'dashboard.view',
             'pages.view',
         ])->get();
-        $userRole->permissions()->attach($userPermissions->pluck('id'));
+        $userRole->permissions()->syncWithoutDetaching($userPermissions->pluck('id'));
 
         // Assign content permissions to editor role
         $editorPermissions = Permission::whereIn('name', [
@@ -61,6 +64,6 @@ class RoleSeeder extends Seeder
             'contacts.view',
             'contacts.reply',
         ])->get();
-        $editorRole->permissions()->attach($editorPermissions->pluck('id'));
+        $editorRole->permissions()->syncWithoutDetaching($editorPermissions->pluck('id'));
     }
 }

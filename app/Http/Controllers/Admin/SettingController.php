@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\UpdateSettingsRequest;
 
 class SettingController extends AdminController
 {
@@ -23,10 +24,9 @@ class SettingController extends AdminController
     /**
      * Update settings.
      */
-    public function update(Request $request)
+    public function update(UpdateSettingsRequest $request)
     {
         $this->requirePermission('settings.edit');
-
         $settings = $request->except(['_token', '_method']);
         
         foreach ($settings as $key => $value) {

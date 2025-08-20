@@ -15,9 +15,10 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Create admin user
-        $adminUser = User::create([
+        $adminUser = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'umeshl@whitelabeliq.com',
+        ], [
             'password' => Hash::make('Umesh@123'),
             'email_verified_at' => now(),
             'is_active' => true,
@@ -26,13 +27,14 @@ class AdminUserSeeder extends Seeder
         // Assign admin role
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole) {
-            $adminUser->roles()->attach($adminRole->id);
+            $adminUser->roles()->syncWithoutDetaching([$adminRole->id]);
         }
 
         // Create a regular user for testing
-        $regularUser = User::create([
+        $regularUser = User::firstOrCreate([
             'name' => 'Regular User',
             'email' => 'user@example.com',
+        ], [
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'is_active' => true,
@@ -41,7 +43,7 @@ class AdminUserSeeder extends Seeder
         // Assign user role
         $userRole = Role::where('name', 'user')->first();
         if ($userRole) {
-            $regularUser->roles()->attach($userRole->id);
+            $regularUser->roles()->syncWithoutDetaching([$userRole->id]);
         }
     }
 }

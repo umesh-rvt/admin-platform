@@ -121,23 +121,23 @@
                     <h3 class="text-lg font-semibold mb-4">{{ $settings['site_name'] ?? config('app.name', 'Laravel') }}</h3>
                     <p class="text-gray-300 mb-4">{{ $settings['site_description'] ?? 'Your trusted platform for excellence.' }}</p>
                     <div class="flex space-x-4">
-                        @if($settings['facebook_url'] ?? false)
-                            <a href="{{ $settings['facebook_url'] }}" class="text-gray-300 hover:text-white">
+                        @if(($settings['social_facebook'] ?? false) || ($settings['facebook_url'] ?? false))
+                            <a href="{{ $settings['social_facebook'] ?? $settings['facebook_url'] }}" class="text-gray-300 hover:text-white">
                                 <i class="fab fa-facebook text-xl"></i>
                             </a>
                         @endif
-                        @if($settings['twitter_url'] ?? false)
-                            <a href="{{ $settings['twitter_url'] }}" class="text-gray-300 hover:text-white">
+                        @if(($settings['social_twitter'] ?? false) || ($settings['twitter_url'] ?? false))
+                            <a href="{{ $settings['social_twitter'] ?? $settings['twitter_url'] }}" class="text-gray-300 hover:text-white">
                                 <i class="fab fa-twitter text-xl"></i>
                             </a>
                         @endif
-                        @if($settings['instagram_url'] ?? false)
-                            <a href="{{ $settings['instagram_url'] }}" class="text-gray-300 hover:text-white">
+                        @if(($settings['social_instagram'] ?? false) || ($settings['instagram_url'] ?? false))
+                            <a href="{{ $settings['social_instagram'] ?? $settings['instagram_url'] }}" class="text-gray-300 hover:text-white">
                                 <i class="fab fa-instagram text-xl"></i>
                             </a>
                         @endif
-                        @if($settings['linkedin_url'] ?? false)
-                            <a href="{{ $settings['linkedin_url'] }}" class="text-gray-300 hover:text-white">
+                        @if(($settings['social_linkedin'] ?? false) || ($settings['linkedin_url'] ?? false))
+                            <a href="{{ $settings['social_linkedin'] ?? $settings['linkedin_url'] }}" class="text-gray-300 hover:text-white">
                                 <i class="fab fa-linkedin text-xl"></i>
                             </a>
                         @endif

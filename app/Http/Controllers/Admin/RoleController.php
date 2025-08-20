@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
 use Illuminate\Validation\Rule;
 
 class RoleController extends AdminController
@@ -52,18 +54,11 @@ class RoleController extends AdminController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
         $this->requirePermission('roles.create');
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles',
-            'display_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $role = Role::create([
             'name' => $validated['name'],
@@ -111,19 +106,12 @@ class RoleController extends AdminController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRoleRequest $request, $id)
     {
         $this->requirePermission('roles.edit');
 
         $role = Role::findOrFail($id);
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($role->id)],
-            'display_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
-            'is_active' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
         $role->update([
             'name' => $validated['name'],
