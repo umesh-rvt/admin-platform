@@ -34,6 +34,14 @@ class Page extends Model
     }
 
     /**
+     * Get the categories that belong to this page.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
      * Get active sections only.
      */
     public function activeSections()
@@ -55,6 +63,16 @@ class Page extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope to get pages by category.
+     */
+    public function scopeByCategory($query, $category)
+    {
+        return $query->whereHas('categories', function ($q) use ($category) {
+            $q->where('categories.id', $category->id);
+        });
     }
 
     /**

@@ -46,6 +46,36 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="categories" class="block text-sm font-medium text-gray-700">Categories</label>
+                    <select name="categories[]" id="categories" multiple
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('categories') border-red-300 @enderror">
+                        @foreach(App\Models\Category::active()->orderBy('name')->get() as $category)
+                            <option value="{{ $category->id }}" {{ in_array($category->id, old('categories', [])) ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('categories')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    <p class="mt-1 text-xs text-gray-500">Hold Ctrl (Cmd on Mac) to select multiple categories</p>
+                </div>
+
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" id="status" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('status') border-red-300 @enderror">
+                        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
+                    </select>
+                    @error('status')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
             <div>
                 <label for="meta_title" class="block text-sm font-medium text-gray-700">Meta Title</label>
                 <input type="text" name="meta_title" id="meta_title" 
@@ -67,25 +97,11 @@
                 @enderror
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                    <select name="status" id="status" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('status') border-red-300 @enderror">
-                        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
-                    </select>
-                    @error('status')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="flex items-center pt-6">
-                    <input type="checkbox" name="is_active" id="is_active" value="1"
-                           class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                           {{ old('is_active', true) ? 'checked' : '' }}>
-                    <label for="is_active" class="ml-2 text-sm text-gray-700">Active</label>
-                </div>
+            <div class="flex items-center">
+                <input type="checkbox" name="is_active" id="is_active" value="1"
+                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       {{ old('is_active', true) ? 'checked' : '' }}>
+                <label for="is_active" class="ml-2 text-sm text-gray-700">Active</label>
             </div>
 
             <!-- Page Sections -->

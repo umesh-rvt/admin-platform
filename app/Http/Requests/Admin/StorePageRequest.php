@@ -16,6 +16,8 @@ class StorePageRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:pages,slug'],
+            'categories' => ['nullable', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'meta_description' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'status' => ['required', 'in:draft,published'],
@@ -24,5 +26,3 @@ class StorePageRequest extends FormRequest
         ];
     }
 }
-
-

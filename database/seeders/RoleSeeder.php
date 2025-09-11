@@ -63,6 +63,10 @@ class RoleSeeder extends Seeder
             'page_sections.edit',
             'contacts.view',
             'contacts.reply',
+            'categories.view',
+            'categories.create',
+            'categories.edit',
+            'categories.delete',
         ])->get();
         $editorRole->permissions()->syncWithoutDetaching($editorPermissions->pluck('id'));
     }

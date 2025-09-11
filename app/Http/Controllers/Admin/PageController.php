@@ -21,7 +21,7 @@ class PageController extends AdminController
     {
         $this->requirePermission('pages.view');
 
-        $query = Page::with('sections');
+        $query = Page::with('sections', 'categories');
 
         // Search functionality
         if ($request->filled('search')) {
@@ -29,6 +29,13 @@ class PageController extends AdminController
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category_id);
             });
         }
 
@@ -73,6 +80,11 @@ class PageController extends AdminController
 
         $page = Page::create($validated);
 
+        // Sync categories
+        if (isset($validated['categories'])) {
+            $page->categories()->sync($validated['categories']);
+        }
+
         // Persist sections sent from the create page form (optional)
         $sections = $request->input('sections', []);
         if (is_array($sections) && count($sections) > 0) {
@@ -109,7 +121,7 @@ class PageController extends AdminController
     {
         $this->requirePermission('pages.view');
 
-        $page->load('sections');
+        $page->load('sections', 'categories');
         return view('admin.pages.show', compact('page'));
     }
 
@@ -120,7 +132,7 @@ class PageController extends AdminController
     {
         $this->requirePermission('pages.edit');
 
-        $page->load('sections');
+        $page->load('sections', 'categories');
         return view('admin.pages.edit', compact('page'));
     }
 
@@ -139,6 +151,11 @@ class PageController extends AdminController
         }
 
         $page->update($validated);
+
+        // Sync categories
+        if (isset($validated['categories'])) {
+            $page->categories()->sync($validated['categories']);
+        }
 
         // Handle batch upsert of sections submitted with the page form
         $incomingSections = $request->input('sections', []);

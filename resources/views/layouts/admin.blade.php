@@ -63,6 +63,14 @@
                     </a>
                     @endif
 
+                    @if(auth()->user()->hasPermission('categories.view'))
+                    <a href="{{ route('admin.categories.index') }}" 
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.categories.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <i class="fas fa-tags mr-3 {{ request()->routeIs('admin.categories.*') ? 'text-primary-700' : 'text-gray-400 group-hover:text-gray-500' }}"></i>
+                        Categories
+                    </a>
+                    @endif
+
                     @if(auth()->user()->hasPermission('pages.view'))
                     <a href="{{ route('admin.pages.index') }}" 
                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.pages.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }}">
@@ -158,4 +166,4 @@
 
     @stack('scripts')
 </body>
-</html> 
+</html>

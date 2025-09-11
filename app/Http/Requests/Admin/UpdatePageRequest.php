@@ -18,6 +18,8 @@ class UpdatePageRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('pages', 'slug')->ignore($pageId)],
+            'categories' => ['nullable', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'meta_description' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string'],
             'status' => ['required', 'in:draft,published'],
@@ -26,5 +28,3 @@ class UpdatePageRequest extends FormRequest
         ];
     }
 }
-
-

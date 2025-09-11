@@ -33,6 +33,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'permissions.edit', 'display_name' => 'Edit Permissions', 'module' => 'permissions', 'description' => 'Can edit existing permissions'],
             ['name' => 'permissions.delete', 'display_name' => 'Delete Permissions', 'module' => 'permissions', 'description' => 'Can delete permissions'],
 
+            // Category Management
+            ['name' => 'categories.view', 'display_name' => 'View Categories', 'module' => 'categories', 'description' => 'Can view categories list'],
+            ['name' => 'categories.create', 'display_name' => 'Create Categories', 'module' => 'categories', 'description' => 'Can create new categories'],
+            ['name' => 'categories.edit', 'display_name' => 'Edit Categories', 'module' => 'categories', 'description' => 'Can edit existing categories'],
+            ['name' => 'categories.delete', 'display_name' => 'Delete Categories', 'module' => 'categories', 'description' => 'Can delete categories'],
+
             // Page Management
             ['name' => 'pages.view', 'display_name' => 'View Pages', 'module' => 'pages', 'description' => 'Can view pages list'],
             ['name' => 'pages.create', 'display_name' => 'Create Pages', 'module' => 'pages', 'description' => 'Can create new pages'],

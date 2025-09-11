@@ -18,13 +18,25 @@
     <!-- Search and Filters -->
     <div class="bg-white rounded-lg shadow p-6">
         <form method="GET" action="{{ route('admin.pages.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
                     <input type="text" name="search" id="search" 
                            value="{{ request('search') }}"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                            placeholder="Search by title or slug...">
+                </div>
+                <div>
+                    <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                    <select name="category_id" id="category_id" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Categories</option>
+                        @foreach(App\Models\Category::active()->orderBy('name')->get() as $category)
+                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
@@ -64,6 +76,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categories</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sections</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Active</th>
@@ -79,6 +92,19 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ $page->slug }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">
+                                    @if($page->categories->count() > 0)
+                                        @foreach($page->categories as $category)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1">
+                                                {{ $category->name }}
+                                            </span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-gray-500">No categories</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ $page->sections->count() }} sections</div>
@@ -134,7 +160,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                                 No pages found.
                             </td>
                         </tr>
@@ -151,4 +177,4 @@
         @endif
     </div>
 </div>
-@endsection 
+@endsection
