@@ -294,4 +294,21 @@ class PageController extends AdminController
         return redirect()->route('admin.pages.index')
             ->with('success', "Page status changed to {$newStatus} successfully.");
     }
+
+    /**
+     * Toggle page active status.
+     */
+    public function toggleActive(Page $page)
+    {
+        $this->requirePermission('pages.edit');
+
+        $newActiveStatus = !$page->is_active;
+        $page->update(['is_active' => $newActiveStatus]);
+
+        $statusText = $newActiveStatus ? 'activated' : 'deactivated';
+        $this->logActivity('update', "Page {$statusText}: {$page->title}", $page);
+
+        return redirect()->route('admin.pages.index')
+            ->with('success', "Page {$statusText} successfully.");
+    }
 }

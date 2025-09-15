@@ -110,14 +110,38 @@
                                 <div class="text-sm text-gray-900">{{ $page->sections->count() }} sections</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                @if(auth()->user()->hasPermission('pages.publish'))
+                                <form method="POST" action="{{ route('admin.pages.toggle-status', $page) }}" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors duration-200 {{ $page->status === 'published' ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' }}" 
+                                            title="Click to toggle status">
+                                        {{ ucfirst($page->status) }}
+                                        <i class="fas fa-sync-alt ml-1 text-xs"></i>
+                                    </button>
+                                </form>
+                                @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $page->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                     {{ ucfirst($page->status) }}
                                 </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                @if(auth()->user()->hasPermission('pages.edit'))
+                                <form method="POST" action="{{ route('admin.pages.toggle-active', $page) }}" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors duration-200 {{ $page->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' }}" 
+                                            title="Click to toggle active status">
+                                        {{ $page->is_active ? 'Active' : 'Inactive' }}
+                                        <i class="fas fa-sync-alt ml-1 text-xs"></i>
+                                    </button>
+                                </form>
+                                @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $page->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $page->is_active ? 'Active' : 'Inactive' }}
                                 </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $page->created_at->format('M j, Y') }}
@@ -135,15 +159,6 @@
                                        class="text-indigo-600 hover:text-indigo-900">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    @endif
-                                    @if(auth()->user()->hasPermission('pages.publish'))
-                                    <form method="POST" action="{{ route('admin.pages.toggle-status', $page) }}" class="inline">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="text-yellow-600 hover:text-yellow-900">
-                                            <i class="fas fa-toggle-on"></i>
-                                        </button>
-                                    </form>
                                     @endif
                                     @if(auth()->user()->hasPermission('pages.delete'))
                                     <form method="POST" action="{{ route('admin.pages.destroy', $page) }}" 

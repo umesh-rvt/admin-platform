@@ -35,6 +35,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('pages/{page}/sections/{section}', [PageController::class, 'updateSection'])->name('pages.sections.update');
     Route::delete('pages/{page}/sections/{section}', [PageController::class, 'destroySection'])->name('pages.sections.destroy');
     Route::patch('pages/{page}/toggle-status', [PageController::class, 'toggleStatus'])->name('pages.toggle-status');
+    Route::patch('pages/{page}/toggle-active', [PageController::class, 'toggleActive'])->name('pages.toggle-active');
 
     // Contact Management
     Route::resource('contacts', ContactController::class)->except(['create', 'store']);
